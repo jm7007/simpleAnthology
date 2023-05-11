@@ -1,0 +1,35 @@
+.intro-page{
+    width:600px;
+    min-width:600px;
+    height:800px;
+    background-color:black;
+    margin: auto;
+    background-image:url("../Image/intro.jpg");
+    background-size: cover;
+    transition:opacity 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    top:80px;
+}
+.slideUp{
+    animation: slideUp 0.5s ease;
+    animation-fill-mode:both;
+}
+@keyframes slideUp{
+    to{top:600px;}
+}
+.intro-page:hover{
+    opacity:0.9;
+}
+.open{
+    color:white;
+    opacity:0;
+    transition:opacity 0.5s;
+    font-family: cursive;
+    font-size: 50px;
+}
+.intro-page:hover>.open{
+    opacity:1;
+}

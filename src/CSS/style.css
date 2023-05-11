@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "성실체";
+  color: #333;
+}
+
+/* 구조 */
+body {
+  max-width: 600px;
+  margin: auto;
+  background-color: rgb(225, 208, 191);
+}
+
+header {
+  height: 80px;
+  width: 600px;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+}
+
+header>h1 {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 40px;
+}
+
+@font-face {
+  font-family: '성실체';
+  src: url("나눔손글씨\ 성실체.ttf");
+}
