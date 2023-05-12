@@ -3,16 +3,15 @@ import axios from "axios";
 
 import "../CSS/boardContentStyle.css";
 
-class BoardCreate extends Component {
+class PageCreate extends Component {
   state= {id: 0};
 
-  setBoard(_author, _title, _content) {
-    let _cre_date = new Date().toISOString().substring(0, 10);
+  setBoard(_author, _title, _content, _source) {
     axios.post("http://localhost:8000/create", {
       author: _author,
       title: _title, 
       content: _content,
-      cre_date: _cre_date
+      source: _source
     }).then(function(response){
         let _id = response.data.id;
         this.setState({id: _id});
@@ -23,7 +22,7 @@ class BoardCreate extends Component {
   }
 
   componentDidUpdate(){
-    this.props.onCreate("read", this.state.id);
+    this.props.onCreate("intro");
   }
 
   render() {
@@ -35,8 +34,10 @@ class BoardCreate extends Component {
           this.setBoard(
             e.target.author.value, 
             e.target.title.value, 
-            e.target.content.value
+            e.target.content.value,
+            e.target.source.value
           );
+          this.componentDidUpdate();
         }.bind(this)}>
           <div className="boardInput">
             <input type="text" name="author" placeholder="작성자" required />
@@ -45,7 +46,10 @@ class BoardCreate extends Component {
             <input className="txtTitle" type="text" name="title" placeholder="제목" required />
           </div>
           <div className="boardInput">
-            <textarea name="content"></textarea>
+            <textarea name="content" placeholder="내용을 적어주세요"></textarea>
+          </div>
+          <div className="sourceInput">
+            <input type="text" name="source" placeholder="출처를 적어주세요" />
           </div>
           <div className="control">
             <div className="right">
@@ -58,4 +62,4 @@ class BoardCreate extends Component {
   }
 }
 
-export default BoardCreate;
+export default PageCreate;

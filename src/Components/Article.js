@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import BoardList from "./BoardList";
-import BoardRead from "./BoardRead";
-import BoardCreate from "./BoardCreate";
-import BoardUpdate from "./BoardUpdate";
+import PageCreate from "./PageCreate";
+import PageUpdate from "./PageUpdate";
 import Intro from "./Intro";
 import Book from "./Book";
 
@@ -18,9 +16,9 @@ class Article extends Component {
     this.setModeAndNo = this.setModeAndNo.bind(this);
   }
 
-  deleteBoard() {
+  deleteBoard(_id) {
     axios.post("http://localhost:8000/delete", {
-      no: this.state.selectBoardNo
+      id: _id
     })
       .then(function(response){
         //비워둠
@@ -33,17 +31,11 @@ class Article extends Component {
   setModeAndNo(_mode, no=0){
     if(_mode === "delete") {
       if(confirm("정말로 삭제하겠습니까?")) {
-        this.deleteBoard();
-        
+        this.deleteBoard(no);
         this.setState({
-          mode: "list"
+          mode: "intro"
         });
         alert("삭제 되었습니다.");
-      } else {
-        this.setState({
-          mode: "read",
-          selectBoardNo: no
-        });
       }
     } else {
       this.setState({
@@ -59,14 +51,10 @@ class Article extends Component {
 
     if(mode === "intro") {
       section = <Intro onSelectItem={this.setModeAndNo} />;
-    } else if(mode === "read") {
-      section = <BoardRead no={this.state.selectBoardNo} onButtonClick={this.setModeAndNo} />;
     } else if(mode == "create") {
-      section = <BoardCreate onCreate={this.setModeAndNo}/>
+      section = <PageCreate onCreate={this.setModeAndNo}/>
     } else if(mode === "update") {
-      section = <BoardUpdate no={this.state.selectBoardNo} onButtonClick={this.setModeAndNo}/>
-    } else if(mode === "list"){
-      section = <BoardList boards={this.state.freeBoard} onSelectItem={this.setModeAndNo} />;
+      section = <PageUpdate no={this.state.selectBoardNo} onButtonClick={this.setModeAndNo}/>
     } else if(mode === "book"){
       section = <Book pageNo={this.state.selectBoardNo} onSelectItem={this.setModeAndNo} onButtonClick={this.setModeAndNo}/>;
     }

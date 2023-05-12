@@ -3,29 +3,29 @@ import axios from "axios";
 
 import "../CSS/boardContentStyle.css";
 
-class BoardUpdate extends Component {
+class PageUpdate extends Component {
   constructor(props){
     super(props);
     this.state = {
-      no: 0,
+      id: 0,
       title: "",
       content: "",
       author: "",
-      cre_date: ""
+      source: ""
     }
     this.inputFormHandler = this.inputFormHandler.bind(this);
   }
   
   getBoard() {
-    axios.post("http://localhost:8000/read", {no: this.props.no})
+    axios.post("http://localhost:8000/read", {id: this.props.no})
       .then(function(response){
         let [_board] = response.data;
         this.setState({
-          no: _board.no,
+          id: _board.id,
           title: _board.title,
           content: _board.content,
           author: _board.author,
-          cre_date: _board.cre_date.substring(0, 10)
+          source: _board.source
         });
       }.bind(this))
       .catch(function(error){
@@ -35,17 +35,19 @@ class BoardUpdate extends Component {
 
   updateBoard() {
     axios.post("http://localhost:8000/update", {
-      no: this.state.no, 
-      title: this.state.title, 
-      content: this.state.content
+      id: this.state.id, 
+      title: this.state.title,
+      content: this.state.content,
+      author: this.state.author,
+      source: this.state.source
     })
       .then(function(response){
-        //비워둠
+
       }.bind(this))
       .catch(function(error){
         console.error(error);
       });
-  }
+}
 
   componentDidMount() {
     this.getBoard();
@@ -62,11 +64,11 @@ class BoardUpdate extends Component {
         <form action="#" method="post" onSubmit={function(e){
           e.preventDefault();
           this.updateBoard();
-          this.props.onButtonClick("read", this.state.no);
+          this.props.onButtonClick("book");
         }.bind(this)}>
           <div className="boardUpdateHeader">
-            <div className="left">작성자: {this.state.author}</div>
-            <div className="right">작성일: {this.state.cre_date}</div>
+            <input className="left" value={this.state.author} onChange={this.inputFormHandler}/>
+            <input className="right" value={this.state.source} onChange={this.inputFormHandler}/>
           </div>
           <div className="boardInput">
             <input className="txtTitle" type="text" name="title" placeholder="제목" 
@@ -87,4 +89,4 @@ class BoardUpdate extends Component {
   }
 }
 
-export default BoardUpdate;
+export default PageUpdate;

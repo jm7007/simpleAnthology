@@ -8,13 +8,9 @@ class Book extends Component {
         super(props);
         this.state = {
             pageNo: 0,
-            title: "",
-            content: "",
-            author: "",
-            source: "",
             pages: []
         }
-        this.inputFormHandler = this.inputFormHandler.bind(this);
+        
     }
 
     getList() {
@@ -31,75 +27,57 @@ class Book extends Component {
         this.getList();
     }
 
-    inputFormHandler(e) {
-        this.setState({[e.target.name]: e.target.value});
-      }
-
-    updateBoard() {
-        alert("업데이트보드메서드");
-        axios.post("http://localhost:8000/update", {
-          id: this.state.pageNo, 
-          title: this.state.title,
-          content: this.state.content,
-          author: this.state.author,
-          source: this.state.source
-        })
-          .then(function(response){
-            //비워둠
-          }.bind(this))
-          .catch(function(error){
-            console.error(error);
-          });
-    }
-
     pageSlide(direction) {
         return () => {
             let pages = this.state.pages;
             switch (direction) {
                 case "forward": {
-                    if (this.state.pageNo == pages.length) { break; }
-                    document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-from-left");
+                    if (this.state.pageNo == pages[pages.length-1].id) { break; }
+                    try{
+                        document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-from-left");
+                    }catch(e){
+                        this.state.pageNo++;
+                        return;
+                    }
                     document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-from-right");
                     document.getElementById("list-page-" + this.state.pageNo).classList.add("page-to-left");
-
-                    document.getElementById("list-page-" + (++this.state.pageNo)).classList.remove("page-to-left");
+                    this.state.pageNo++;
+                    try{
+                    document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-to-left");
+                    }catch(e){
+                        this.state.pageNo++;
+                        return;
+                    }
                     document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-to-right");
                     document.getElementById("list-page-" + this.state.pageNo).classList.add("page-from-right");
-                    this.setInputState();
                     break;
                 }
                 case "back": {
                     if (0 == this.state.pageNo) { break; }
+                    try{
                     document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-from-left");
+                    }catch(e){
+                        this.state.pageNo--;
+                        return;
+                    }
                     document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-from-right");
                     document.getElementById("list-page-" + this.state.pageNo).classList.add("page-to-right");
-
-                    document.getElementById("list-page-" + (--this.state.pageNo)).classList.remove("page-to-left");
+                    this.state.pageNo--;
+                    try{
+                    document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-to-left");
+                    }catch{
+                        this.state.pageNo--;
+                        return;
+                    }
+                    document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-to-left");
                     document.getElementById("list-page-" + this.state.pageNo).classList.remove("page-to-right");
                     document.getElementById("list-page-" + this.state.pageNo).classList.add("page-from-left");
-                    this.setInputState();
                     break;
                 }
                 default: break;
             }
         };
     }
-    setInputState(){
-        let pageId = this.state.pageNo;
-        if(pageId == 0){return;}
-        let targetPage = document.getElementById("list-page-"+pageId);
-        let pageTitle = targetPage.querySelector(".page-title").value;
-        let pageContent = targetPage.querySelector(".page-content").value;
-        let pageAuthor = targetPage.querySelector(".page-author").value;
-        let pageSource = targetPage.querySelector(".page-source").value;
-        this.setState({
-            title: pageTitle,
-            content: pageContent,
-            author: pageAuthor,
-            source: pageSource
-        });
-    }
-
     render() {
         let pages = this.state.pages;
 
@@ -113,7 +91,7 @@ class Book extends Component {
                 </li>);
         }
         list.push(
-            <li id={"list-page-0"} className="list-page" key={0}>
+            <li id={"list-page-0"} className="list-page" key={0} style={{opacity:1, left:0}}>
                 <div className="page-no">목차</div>
                 <ul>
                     {index}
@@ -130,15 +108,21 @@ class Book extends Component {
                         this.props.onButtonClick("book");
                     }.bind(this)}>
                         <div className="page-no">{page.id}</div>
-                        <input name="title" className="page-title" defaultValue={page.title} onChange={this.inputFormHandler}/>
-                        <input name="author" className="page-author" defaultValue={page.author} onChange={this.inputFormHandler}/>
-                        <textarea name="content" className="page-content" defaultValue={page.content} onChange={this.inputFormHandler}></textarea>
-                        <input name="source" className="page-source" defaultValue={page.source} onChange={this.inputFormHandler}/>
-                    <div className="controlbar">
-                        <button>새 글</button>
-                        <button type="submit">수정</button>
-                        <button>삭제</button>
-                    </div>
+                        <div className="page-title">{page.title}</div>
+                        <div className="page-author">{page.author}</div>
+                        <pre className="page-content">{page.content}</pre>
+                        <div className="page-source">{page.source}</div>
+                        <div className="controlbar">
+                            <button type="button" onClick={function () {
+                                this.props.onSelectItem("create");
+                            }.bind(this)}>글쓰기</button>
+                            <button type="button" onClick={function () {
+                                this.props.onButtonClick("update", this.state.pageNo);
+                            }.bind(this)}>수정</button>
+                            <button type="button" onClick={function () {
+                                this.props.onButtonClick("delete", this.state.pageNo);
+                            }.bind(this)}>삭제</button>
+                        </div>
                     </form>
                 </li>
             );

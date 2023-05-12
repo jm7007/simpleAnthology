@@ -118,12 +118,51 @@
     background: none;
 }
 
-.page-no {}
+.page-no {
+    font-size: 30px;
+    margin: 15px;
+}
+#list-page-0 h3{
+    font-size: 30px;
+    margin: 20px 50px;
+}
+#list-page-0 ul{
+    list-style: none;
+}
+.page-title {
+    text-align: center;
+    font-size: 49px;
+}
 
-.page-title {}
+.page-author {
+    text-align: end;
+    margin: 20px 50px;
+    font-size: 30px;
+}
 
-.page-author {}
+.page-content {
+    padding: 30px;
+    font-size: 30px;
+    line-height: 1.8;
+}
 
-.page-content {}
-
-.page-source {}
+.page-source {
+    margin: 50px 30px;
+    font-size: 20px;
+}
+.controlbar{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+.controlbar>button{
+    color: black;
+    height: 50px;
+    width: 90px;
+    font-size: 30px;
+    padding-bottom: 5px;
+    margin-left: 20px;
+    border: 5px outset tan;
+    background-color: tan;
+    border-radius: 5px;
+}

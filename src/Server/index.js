@@ -32,10 +32,10 @@ app.post("/read", function(request, response){
   });
   request.on("end", function(){
     let post = JSON.parse(body);
-    let no = post.no;
+    let id = post.id;
 
-    let sql = "SELECT * FROM freeboard WHERE no=?";
-    db.query(sql, [no], function(error, board){
+    let sql = "SELECT * FROM anthology WHERE id=?";
+    db.query(sql, [id], function(error, board){
       response.send(board);
     })
   });
@@ -52,24 +52,21 @@ app.post("/create", function(request, response){
     let author = post.author;
     let title = post.title;
     let content = post.content;
-    let cre_date = post.cre_date;
+    let source = post.source;
 
-    let sql = "INSERT INTO freeboard(title, content, author, cre_date) VALUES(?, ?, ?, ?)";
-    db.query(sql, [title, content, author, cre_date], function(error, result){
-      response.send({id: result.insertId});
+    let sql = "INSERT INTO anthology (title, content, author, source) VALUES(?, ?, ?, ?)";
+    db.query(sql, [title, content, author, source], function(error, result){
     })
   });
 })
 
 app.post("/update", function(request, response){
-  alert("update post started");
   let body = "";
   request.on("data", function(data){
     body += data;
   });
   request.on("end", function(){
     let post = JSON.parse(body);
-    
     let id = post.id;
     let title = post.title;
     let content = post.content;
@@ -78,12 +75,7 @@ app.post("/update", function(request, response){
 
     let sql = "UPDATE anthology SET title=?, content=?, author=?, source=? WHERE id=?";
     db.query(sql, [title, content, author, source, id], function(error, result){
-      if(error){
-        console.log("update error is occured");
-      }
-      else{
-        console.log("anthology is updated id: "+id);
-      }
+
     })
   });
 })
@@ -96,10 +88,10 @@ app.post("/delete", function(request, response){
   request.on("end", function(){
     let post = JSON.parse(body);
     
-    let no = post.no;
+    let id = post.id;
     
-    let sql = "DELETE FROM freeboard WHERE no=?";
-    db.query(sql, [no], function(error, result){
+    let sql = "DELETE FROM anthology WHERE id=?";
+    db.query(sql, [id], function(error, result){
       //비워둠
     })
   });
